@@ -3,14 +3,19 @@ const canvas = document.getElementById('networkCanvas');
 const ctx = canvas.getContext('2d');
 
 let redAleatoria;
+let nodoOrigen = 0, nodoDestino = 0;
+let rutaMinimaConRetardos;
 
 const nodeRadius = 40;
-const nodeRandomDelay = 1000;
 const numNodos = 5;
-const nodeConnect = 2
+const nodeConnect = 2;
+const nodeRandomDelay = 1000;
+const pipeRandomWeight = 100; // No hay retardo entre nodos 100
+
 
 // Localizando elementos en el DOM
 const btnCNet = document.getElementById("btnCNet");
+const btnMinPath = document.getElementById("btnMinPath");
 
 // Clase para representar un nodo en el grafo
 class Nodo {
@@ -51,10 +56,11 @@ function crearRedAleatoriaConCongestion(numNodos, numConexiones) {
       for (let j = 0; j < numConexiones; j++) {
         pickNode = Math.floor(Math.random() * numNodos);
         nodoAleatorio = nodos[pickNode];
-        peso = Math.random() * 100; // Peso aleatorio para simular la distancia entre nodos
+        //peso = Math.random() * pipeRandomWeight; // Peso aleatorio para simular la distancia entre nodos
+        peso = pipeRandomWeight; // El mismo peso para todas las conexiones
         nodoActual.conectar(nodoAleatorio, peso);
       }
-    }
+    }    
   
     return nodos;
 }
@@ -116,4 +122,16 @@ btnCNet.onclick = () => {
     // Dibujar la red que hemos generado
     drawNet(redAleatoria);
   
+}
+
+btnMinPath.onclick = () => {
+
+  // Supongamos que tienes una red de nodos llamada redAleatoria y tienes nodos origen y destino
+  nodoOrigen = redAleatoria[0]; // Nodo de origen
+  nodoDestino = redAleatoria[numNodos - 1]; // Nodo de destino
+
+  // Calcular la ruta mínima entre el nodo origen y el nodo destino utilizando Dijkstra con retrasos
+  rutaMinimaConRetardos = dijkstraConRetardos(redAleatoria, nodoOrigen, nodoDestino);
+  console.log("Ruta mínima con retrasos:", rutaMinimaConRetardos);
+
 }
